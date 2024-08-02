@@ -1,0 +1,46 @@
+{
+  "name": "@ohos/dkv",
+  "description": "dkv",
+  "version": "3.1",
+  "license": "Apache License 2.0",
+  "publishAs": "code-segment",
+  "segment": {
+    "destPath": "foundation/distributeddatamgr/dkv"
+  },
+  "dirs": {},
+  "scripts": {},
+  "component": {
+    "name": "dkv",
+    "subsystem": "distributeddatamgr",
+    "syscap": [],
+    "features": [],
+    "adapted_system_type": [
+      "standard"
+    ],
+    "rom": "",
+    "ram": "",
+    "deps": {
+      "components": [
+        "access_token",
+        "data_share",
+        "device_manager",
+        "distributeddb",
+        "hilog",
+        "kv_store"
+      ],
+      "third_party": [
+        "brpc",
+        "weight_raft"
+      ]
+    },
+    "build": {
+      "sub_component": [
+        "//foundation/distributeddatamgr/dkv:dkv",
+        "//foundation/distributeddatamgr/dkv:dkv_server",
+        "//foundation/distributeddatamgr/dkv:dkv_client"
+      ],
+      "inner_kits": [],
+      "test": []
+    }
+  }
+}

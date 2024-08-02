@@ -1,0 +1,24 @@
+syntax="proto2";
+package dkv;
+option cc_generic_services = true;
+
+message DKVData {
+  required string key = 1;
+  optional string value = 2;
+};
+
+message DKVRequest {
+  required DKVData data = 1;
+};
+
+message DKVResponse {
+  required bool success = 1;
+  optional string value = 2;
+  optional string failinfo = 3;
+};
+
+service DKVService {
+  rpc setDKV(DKVRequest) returns (DKVResponse);
+  rpc getDKV(DKVRequest) returns (DKVResponse);
+
+};

@@ -1,0 +1,59 @@
+import("//build/ohos.gni")
+
+ohos_shared_library("dkv") {
+  sources = [
+    "src/dkv.cpp",
+    "src/dkv_service.pb.cc",
+    "src/dkv_service_impl.cpp",
+  ]
+  include_dirs = [ "include" ]
+  public_deps = [
+    "//third_party/brpc:brpc",
+    "//third_party/weight_raft:weight_raft",
+  ]
+  cflags_cc = [
+    "-Wno-unused-private-field"
+  ]
+  external_deps = [
+    "device_manager:devicemanagersdk",
+    "hilog:libhilog",
+    "kv_store:distributeddata_inner",
+  ]
+  use_rtti = true
+  use_exceptions = true
+  install_enable = true
+  part_name = "dkv"
+}
+
+ohos_executable("dkv_server") {
+  sources = [ "server_main.cpp" ]
+  include_dirs = [ "include" ]
+  deps = [
+    ":dkv",
+    "//third_party/brpc:brpc",
+  ]
+  external_deps = [
+    "access_token:libaccesstoken_sdk",
+    "access_token:libnativetoken",
+    "access_token:libtoken_setproc",
+    "device_manager:devicemanagersdk",
+    "kv_store:distributeddata_inner",
+  ]
+  use_rtti = true
+  use_exceptions = true
+  install_enable = true
+  part_name = "dkv"
+}
+
+ohos_executable("dkv_client") {
+  sources = [ "client_main.cpp" ]
+  include_dirs = [ "include" ]
+  deps = [
+    ":dkv",
+    "//third_party/brpc:brpc",
+  ]
+  use_rtti = true
+  use_exceptions = true
+  install_enable = true
+  part_name = "dkv"
+}
