@@ -10,6 +10,7 @@
 #include <cstdint>
 #include <filesystem>
 #include <iostream>
+#include <memory>
 #include <shared_mutex>
 #include <string>
 #include <vector>
@@ -28,23 +29,48 @@ namespace dkv {
     virtual void OnRemoteDied() override {}
   };
 
+  class DefaultKvStoreSyncCallback : public OHOS::DistributedKv::KvStoreSyncCallback {
+  public:
+    void SyncCompleted(const std::map<std::string, OHOS::DistributedKv::Status> &results) {
+      LOG(INFO) << "SyncCompleted";
+      for (auto &&result : results) {
+        LOG(INFO) << result.first << ", result: "
+                  << (result.second == OHOS::DistributedKv::Status::SUCCESS ? "SUCCESS" : "FAILURE")
+                  << std::to_string(result.second);
+      }
+    }
+  };
+  class DKV;
+  class DefaultKvStoreObserver : public OHOS::DistributedKv::KvStoreObserver {
+    DKV *m_dkv_ptr;
+
+  public:
+    DefaultKvStoreObserver(DKV *dkv_ptr) : m_dkv_ptr(dkv_ptr) {}
+    virtual void OnChange(
+        const OHOS::DistributedKv::ChangeNotification &changeNotification) override;
+  };
+
   class DKV {  // : public OHOS::DistributedKv::KvStore {
     OHOS::DistributedHardware::DeviceManager &m_device_manager;
-    std::string m_device_id;
+    std::string m_network_id;
     const static std::string m_app_id;
     const static std::string m_store_id;
+    const static std::string m_main_store_id;
     const static std::string m_base_dir;
+    // const static std::string m_main_base_dir;
 
     std::shared_mutex m_masters_mutex;
     std::vector<std::string> m_masters;
     std::shared_ptr<OHOS::DistributedKv::SingleKvStore> m_kv_store_ptr = nullptr;
+    std::shared_ptr<OHOS::DistributedKv::SingleKvStore> m_kv_main_store_ptr = nullptr;
     std::shared_ptr<weight_raft::WeightServer> m_server_ptr = nullptr;
     std::set<std::string> m_ips;
     std::string m_my_ip;
     int m_port;
     int m_weight;
-
+    std::shared_ptr<DefaultKvStoreSyncCallback> m_defaultKvStoreSyncCallback_ptr;
     OHOS::DistributedKv::DistributedKvDataManager m_kv_data_manager;
+    void create_dir(std::string directory);
 
   public:
     DKV(std::set<std::string> ips, int port, std::string my_ip, int weight);
@@ -88,6 +114,7 @@ namespace dkv {
     //     const std::vector<std::string> &files, const std::string &baseDir,
     //     std::map<std::string, OHOS::DistributedKv::Status>
     //         &OHOS::DistributedKv::status) override;
+    friend class DefaultKvStoreObserver;
   };
 }  // namespace dkv
 #endif

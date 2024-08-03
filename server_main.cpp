@@ -31,7 +31,7 @@ void setPermissions() {
       .dcaps = NULL,
       .perms = perms,
       .acls = NULL,
-      .processName = "test_kv",
+      .processName = "dkv_server",
       .aplStr = "system_basic",
   };
   tokenId = GetAccessTokenId(&infoInstance);
@@ -60,8 +60,7 @@ int main(int argc, char* argv[]) {
   }
   butil::EndPoint ep(butil::IP_ANY, kv_port);
   // Start the server
-  brpc::ServerOptions options;
-  if (server.Start(ep, &options) != 0) {
+  if (server.Start(ep, nullptr) != 0) {
     LOG(ERROR) << "Fail to start DKVServer";
     return -1;
   }

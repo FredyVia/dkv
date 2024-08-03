@@ -28,7 +28,7 @@ namespace dkv {
       response->set_success(true);
     } else {
       response->set_success(false);
-      response->set_failinfo(std::to_string(status));
+      response->set_failinfo(std::to_string(status - DistributedKv::Status::ERROR));
     }
   }
 
@@ -43,6 +43,7 @@ namespace dkv {
       response->set_value(value.ToString());
     } else {
       response->set_success(false);
+      response->set_failinfo(std::to_string(status - DistributedKv::Status::ERROR));
       response->set_value("-1");
     }
   }

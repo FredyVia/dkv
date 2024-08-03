@@ -25,7 +25,6 @@
         "data_share",
         "device_manager",
         "distributeddb",
-        "hilog",
         "kv_store"
       ],
       "third_party": [

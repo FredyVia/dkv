@@ -44,7 +44,8 @@ int main(int argc, char *argv[]) {
       throw runtime_error("Can't get the dkv value");
     }
     if (!response.success()) {
-      cout << "Fail to response get\n";
+      cout << "Fail to response get" << endl;
+      cout << response.failinfo() << endl;
       throw runtime_error("dkv get logic error");
     }
     cout << "get the value: " << response.value() << endl;
@@ -52,10 +53,11 @@ int main(int argc, char *argv[]) {
   } else if (FLAGS_command == "set") {
     stub.setDKV(&cntl, &request, &response, NULL);
     if (cntl.Failed()) {
-      throw runtime_error("Can't get the dkv value");
+      throw runtime_error("Can't set the dkv value");
     }
     if (!response.success()) {
       cout << "Fail to response set\n";
+      cout << response.failinfo() << endl;
       throw runtime_error("dkv set logic error");
     }
     cout << "setDKV success\n";

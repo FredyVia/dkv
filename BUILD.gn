@@ -16,7 +16,6 @@ ohos_shared_library("dkv") {
   ]
   external_deps = [
     "device_manager:devicemanagersdk",
-    "hilog:libhilog",
     "kv_store:distributeddata_inner",
   ]
   use_rtti = true
